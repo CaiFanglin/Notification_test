@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>web Notification</title>
+</head>
+<body>
+	<button id="button">有人想加你为好友</button>
+	<p id="text"></p>
+	<script type="text/javascript">
+		window.onload = function(){
+			var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+			function $(id){
+				if(document.getElementById){
+					return typeof id ==="string"?document.getElementById(id):id;
+				}else if(document.all){
+					return typeof id ==="string"?document.all[id]:id;
+				}else if(document.layers){
+					return typeof id ==="string"?document.layers[id]:id;
+				}
+			}
+			if(Notification){
+				var button = $("button"),text = $("text");
+				var popNotice = function(){
+					if(Notification.permission == "granted"){
+						var notification = new Notification("提示",{
+							body:'你有一条新消息！',
+							icon:'http://img2.imgtn.bdimg.com/it/u=1390598795,359021793&fm=21&gp=0.jpg'
+						});
+						notification.onclick = function(){
+							notification.close();
+						}
+					}
+				};
+				button.onclick = function(){
+					if(Notification.permission =="granted"){
+						popNotice();
+					}else if(Notification.permission !="denied"){
+						Notification.requestPermission(function(){
+							popNotice();
+						})
+					}
+				}
+			}else{
+				$("text").innerHTML = "您的浏览器不支持notification";
+			}
+		}
+	</script>
+</body>
+</html>
